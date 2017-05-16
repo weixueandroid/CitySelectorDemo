@@ -30,6 +30,7 @@ public class ListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<ArrayList<City>> lists;
     private List<String> keyList;
+    private OnButtonClickListener onButtonClickListener;
 
     public ListAdapter(Context context, List<String> keyList, List<ArrayList<City>> lists) {
         this.inflater = LayoutInflater.from(context);
@@ -56,7 +57,7 @@ public class ListAdapter extends BaseAdapter {
     ViewHolder holder;
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.recent_city, null);
             holder = new ViewHolder();
@@ -66,13 +67,32 @@ public class ListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.alpha.setText(keyList.get(position));
+        if (keyList.isEmpty() || keyList.get(position) == ""){
+            holder.alpha.setVisibility(View.GONE);
+        }else {
+            holder.alpha.setVisibility(View.VISIBLE);
+            holder.alpha.setText(keyList.get(position));
+        }
         holder.name.setAdapter(new ResultListAdapter(context, lists.get(position)));
+        holder.name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                onButtonClickListener.onButtonClick(view,position,pos);
+            }
+        });
         return convertView;
     }
 
     private class ViewHolder {
         TextView alpha; // 首字母标题
         GridView name; // 城市名字
+    }
+
+    public interface OnButtonClickListener{
+        void onButtonClick(View view,int position,int pos);
+    }
+
+    public void SetOnButtonClickListener(OnButtonClickListener onButtonClickListener){
+        this.onButtonClickListener = onButtonClickListener;
     }
 }

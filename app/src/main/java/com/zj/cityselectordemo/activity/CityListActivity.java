@@ -1,6 +1,7 @@
 package com.zj.cityselectordemo.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
@@ -48,7 +49,7 @@ import java.util.regex.Pattern;
 public class CityListActivity extends AppCompatActivity {
 
 	private ListAdapter adapter;
-	private ResultListAdapter resultAdapter;
+	private ListAdapter resultAdapter;
 	private ListView lvCity;
 	private ListView lvResult;
 	private TextView tvInitial; // 对话框首字母textview
@@ -70,6 +71,7 @@ public class CityListActivity extends AppCompatActivity {
 	private ArrayList<City> historyList;// 搜索历史城市列表
 	private ArrayList<City> itemList;
 	private HashMap<String,ArrayList<City>> listMap = new HashMap<String,ArrayList<City>>();
+	private List<ArrayList<City>> results = new ArrayList<ArrayList<City>>();
 	private List<ArrayList<City>> lists = new ArrayList<ArrayList<City>>();
 	private List<String> keyList = new ArrayList<String>();
 	private DatabaseHelper helper;
@@ -109,7 +111,7 @@ public class CityListActivity extends AppCompatActivity {
 		handler = new Handler();
 		overlayThread = new OverlayThread();
 
-		resultAdapter = new ResultListAdapter(this, resultList);
+		resultAdapter = new ListAdapter(this,new ArrayList<String>(), results);
 		lvResult.setAdapter(resultAdapter);
 
 		locationList.add(new City("正在定位","0"));
@@ -146,6 +148,7 @@ public class CityListActivity extends AppCompatActivity {
 					lvResult.setVisibility(View.GONE);
 					tvNoResult.setVisibility(View.GONE);
 				} else {
+					results.clear();
 					resultList.clear();
 					lvLetter.setVisibility(View.GONE);
 					lvCity.setVisibility(View.GONE);
@@ -172,20 +175,44 @@ public class CityListActivity extends AppCompatActivity {
 		lvCity.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-									int position, long id) {
-				Toast.makeText(getApplicationContext(), allList.get(position).getName(), Toast.LENGTH_SHORT).show();
-				if (position > 2) {
-					insertCity(allList.get(position).getName());
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				Toast.makeText(getApplicationContext(), allList.get(position).getName(), Toast.LENGTH_SHORT).show();
+//				if (position > 2) {
+//					insertCity(allList.get(position).getName());
+//				}
+			}
+		});
+//		lvResult.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				Toast.makeText(getApplicationContext(), resultList.get(position).getName(), Toast.LENGTH_SHORT).show();
+//				insertCity(resultList.get(position).getName());
+//			}
+//		});
+		adapter.SetOnButtonClickListener(new ListAdapter.OnButtonClickListener() {
+			@Override
+			public void onButtonClick(View view, int pos,int position) {
+				String name = lists.get(pos).get(position).getName();
+				if ("正在定位".equals(name) || "定位失败".equals(name)){
+					locationClient.startLocation();
+				}else {
+					Intent intent = new Intent();
+					intent.putExtra("CityName", name);
+//					setResult(RESULT_OK);
+					Log.e("allList", name);
+//					finish();
 				}
 			}
 		});
-		lvResult.setOnItemClickListener(new OnItemClickListener() {
-
+		resultAdapter.SetOnButtonClickListener(new ListAdapter.OnButtonClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(getApplicationContext(), resultList.get(position).getName(), Toast.LENGTH_SHORT).show();
-				insertCity(resultList.get(position).getName());
+			public void onButtonClick(View view, int position,int pos) {
+				Intent intent = new Intent();
+				intent.putExtra("CityName",resultList.get(position).getName());
+//				setResult(RESULT_OK);
+				Log.e("resultList", resultList.get(position).getName());
+//				finish();
 			}
 		});
 	}
@@ -329,6 +356,7 @@ public class CityListActivity extends AppCompatActivity {
 			e.printStackTrace();
 		}
 		Collections.sort(resultList, comparator);
+		results.add(resultList);
 	}
 
 	/**
