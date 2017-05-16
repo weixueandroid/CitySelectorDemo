@@ -176,12 +176,19 @@ public class CityListActivity extends AppCompatActivity {
 			@Override
 			public void onButtonClick(View view, int pos,int position) {
 				String name = lists.get(pos).get(position).getName();
-				if ("正在定位".equals(name) || "定位失败".equals(name)){
-					locationClient.startLocation();
+				if ("正在定位".equals(name)){
+
+				}else if ("定位失败".equals(name)){
+					startLocation();
+					locationList.clear();
+					locationList.add(0,new City("正在定位","0"));
+					lists.remove(0);
+					lists.add(0,locationList);
+					adapter.notifyDataSetChanged();
 				}else {
 					Intent intent = new Intent();
 					intent.putExtra("CityName", name);
-					setResult(RESULT_OK);
+					setResult(RESULT_OK,intent);
 					Log.e("allList", name);
 					finish();
 				}
@@ -191,9 +198,9 @@ public class CityListActivity extends AppCompatActivity {
 			@Override
 			public void onButtonClick(View view, int position,int pos) {
 				Intent intent = new Intent();
-				intent.putExtra("CityName",resultList.get(position).getName());
-				setResult(RESULT_OK);
-				Log.e("resultList", resultList.get(position).getName());
+				intent.putExtra("CityName",resultList.get(pos).getName());
+				setResult(RESULT_OK,intent);
+				Log.e("resultList", resultList.get(pos).getName());
 				finish();
 			}
 		});
@@ -429,6 +436,10 @@ public class CityListActivity extends AppCompatActivity {
 		locationOption.setOnceLocationLatest(true);
 		//设置定位参数
 		locationClient.setLocationOption(locationOption);
+		startLocation();
+	}
+
+	private void startLocation(){
 		locationClient.startLocation();
 		// 设置定位监听
 		locationClient.setLocationListener(new AMapLocationListener() {
