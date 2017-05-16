@@ -57,12 +57,6 @@ public class ResultListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.name.setText(results.get(position).getName());
-//        viewHolder.name.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, results.get(position).getName(),Toast.LENGTH_SHORT).show();
-//            }
-//        });
         return convertView;
     }
 

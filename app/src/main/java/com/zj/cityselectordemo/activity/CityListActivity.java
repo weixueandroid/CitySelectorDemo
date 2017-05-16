@@ -172,24 +172,6 @@ public class CityListActivity extends AppCompatActivity {
 			public void afterTextChanged(Editable s) {
 			}
 		});
-		lvCity.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Toast.makeText(getApplicationContext(), allList.get(position).getName(), Toast.LENGTH_SHORT).show();
-//				if (position > 2) {
-//					insertCity(allList.get(position).getName());
-//				}
-			}
-		});
-//		lvResult.setOnItemClickListener(new OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Toast.makeText(getApplicationContext(), resultList.get(position).getName(), Toast.LENGTH_SHORT).show();
-//				insertCity(resultList.get(position).getName());
-//			}
-//		});
 		adapter.SetOnButtonClickListener(new ListAdapter.OnButtonClickListener() {
 			@Override
 			public void onButtonClick(View view, int pos,int position) {
@@ -199,9 +181,9 @@ public class CityListActivity extends AppCompatActivity {
 				}else {
 					Intent intent = new Intent();
 					intent.putExtra("CityName", name);
-//					setResult(RESULT_OK);
+					setResult(RESULT_OK);
 					Log.e("allList", name);
-//					finish();
+					finish();
 				}
 			}
 		});
@@ -210,9 +192,9 @@ public class CityListActivity extends AppCompatActivity {
 			public void onButtonClick(View view, int position,int pos) {
 				Intent intent = new Intent();
 				intent.putExtra("CityName",resultList.get(position).getName());
-//				setResult(RESULT_OK);
+				setResult(RESULT_OK);
 				Log.e("resultList", resultList.get(position).getName());
-//				finish();
+				finish();
 			}
 		});
 	}
