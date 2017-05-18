@@ -231,18 +231,16 @@ public class CityListActivity extends AppCompatActivity {
 			keyList.add(currentStr);
 		}
 		removeDuplicateWithOrder(keyList);
-
+		for (int j = 0; j < keyList.size(); j++){
+			listMap.put(keyList.get(j),new ArrayList<City>());
+		}
 		for (int i = 0; i < allList.size(); i++) {
 			// 当前汉语拼音首字母
 			String currentStr = getAlpha(allList.get(i).getPinyi());
-			if (listMap.get(currentStr) == null){
-				listMap.put(currentStr,new ArrayList<City>());
-			}else {
-				itemList = listMap.get(currentStr);
-				City city1 = allList.get(i);
-				itemList.add(city1);
-				listMap.put(currentStr, itemList);
-			}
+			itemList = listMap.get(currentStr);
+			City city1 = allList.get(i);
+			itemList.add(city1);
+			listMap.put(currentStr, itemList);
 		}
 
 		for (int i = 0; i < keyList.size(); i++) {
