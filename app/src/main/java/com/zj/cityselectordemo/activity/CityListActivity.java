@@ -153,6 +153,7 @@ public class CityListActivity extends AppCompatActivity {
 					lvLetter.setVisibility(View.GONE);
 					lvCity.setVisibility(View.GONE);
 					getResultCityList(s.toString());
+					insertCity(s.toString());
 					if (resultList.size() <= 0) {
 						tvNoResult.setVisibility(View.VISIBLE);
 						lvResult.setVisibility(View.GONE);
@@ -207,12 +208,12 @@ public class CityListActivity extends AppCompatActivity {
 	}
 
 	private void insertCity(String name) {
-		SQLiteDatabase db = helper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select * from recentcity where name = '" + name + "'", null);
+		SQLiteDatabase db = helper.getWritableDatabase();
+		Cursor cursor = db.rawQuery("select * from city where name = '" + name + "'", null);
 		if (cursor.getCount() > 0) { //
-			db.delete("recentcity", "name = ?", new String[] { name });
+			db.delete("city", "name = ?", new String[] { name });
 		}
-		db.execSQL("insert into recentcity(name, date) values('" + name + "', " + System.currentTimeMillis() + ")");
+		db.execSQL("insert into city(name, date) values('" + name + "', " + System.currentTimeMillis() + ")");
 		db.close();
 	}
 
@@ -291,7 +292,7 @@ public class CityListActivity extends AppCompatActivity {
 	 */
 	private void historyCityInit() {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select * from recentcity order by date desc limit 0, 9", null);
+		Cursor cursor = db.rawQuery("select * from city order by date desc limit 0, 9", null);
 		while (cursor.moveToNext()) {
 			City city = new City(cursor.getString(1),cursor.getString(2));
 			historyList.add(city);
@@ -307,7 +308,7 @@ public class CityListActivity extends AppCompatActivity {
 		try {
 			dbHelper.createDataBase();
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
-			Cursor cursor = db.rawQuery("select * from recentcity", null);
+			Cursor cursor = db.rawQuery("select * from city", null);
 			City city;
 			while (cursor.moveToNext()) {
 				city = new City(cursor.getString(1), cursor.getString(2));
@@ -329,7 +330,7 @@ public class CityListActivity extends AppCompatActivity {
 			dbHelper.createDataBase();
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
 			Cursor cursor = db.rawQuery(
-					"select * from recentcity where name like \"%" + keyword
+					"select * from city where name like \"%" + keyword
 							+ "%\" or pinyin like \"%" + keyword + "%\"", null);
 			City city;
 			Log.e("info", "length = " + cursor.getCount());

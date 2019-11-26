@@ -74,7 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	public DBHelper(Context context) {
-		this(context, DB_PATH + DB_NAME);
+		this(context, DB_NAME);
 	}
 
 	public void createDataBase() throws IOException {
