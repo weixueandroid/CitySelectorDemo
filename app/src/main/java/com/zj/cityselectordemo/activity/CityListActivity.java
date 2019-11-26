@@ -307,7 +307,7 @@ public class CityListActivity extends AppCompatActivity {
 		try {
 			dbHelper.createDataBase();
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
-			Cursor cursor = db.rawQuery("select * from city", null);
+			Cursor cursor = db.rawQuery("select * from recentcity", null);
 			City city;
 			while (cursor.moveToNext()) {
 				city = new City(cursor.getString(1), cursor.getString(2));
@@ -329,7 +329,7 @@ public class CityListActivity extends AppCompatActivity {
 			dbHelper.createDataBase();
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
 			Cursor cursor = db.rawQuery(
-					"select * from city where name like \"%" + keyword
+					"select * from recentcity where name like \"%" + keyword
 							+ "%\" or pinyin like \"%" + keyword + "%\"", null);
 			City city;
 			Log.e("info", "length = " + cursor.getCount());
